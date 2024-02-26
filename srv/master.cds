@@ -1,17 +1,28 @@
-using {com.test.sdb as db} from '../db/schema';
+using {com.test.hackathon as db} from '../db/schema';
 
 service Market {
     entity Business_Partner as projection on db.Business_Partner;
     entity States           as projection on db.States;
     entity Store            as projection on db.Store;
     entity Product          as projection on db.Product;
-    // entity Stock            as projection on db.Stock;
+    entity Stock            as projection on db.Stock;
+    entity Purchase            as projection on db.Purchase;
+    entity Sales            as projection on db.Sales;
+
+   
 }
+
+
 
 annotate Market.Business_Partner with @odata.draft.enabled;
 annotate Market.Store with @odata.draft.enabled;
 annotate Market.Product with @odata.draft.enabled;
-// annotate Market.Stock with @odata.draft.enabled;
+annotate Market.Stock with @odata.draft.enabled;
+annotate Market.Purchase  with @odata.draft.enabled;
+annotate Market.Sales with @odata.draft.enabled;
+
+
+
 
 annotate Market.Business_Partner with {
     pinCode @assert.format: '^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$';
@@ -22,6 +33,13 @@ annotate Market.Store with {
     PinCode @assert.format: '^[1-9]{1}[0-9]{2}\s{0,1}[0-9]{3}$';
     
 }
+
+// annotate Market.Product with {
+//     imageURL @assert.format: '^“((http|https)://)(www.)?” 
+// + “[a-zA-Z0-9@:%._\\+~#?&//=]{2,256}\\.[a-z]” 
+// + “{2,6}\\b([-a-zA-Z0-9@:%._\\+~#?&//=]*)”$';
+    
+// }
 
 annotate Market.States with @(UI.LineItem: [
     {
@@ -262,47 +280,125 @@ annotate Market.Product with @(
 
 );
 
-// annotate Market.Stock with @(
-//     UI.LineItem:[
-//         {
-//             Label:'Store Id',
-//             Value:storeId_ID
-//         },
-//          {
-//             Label:'Product Id',
-//             Value:productId_ID
-//         },
-//         {
-//             Label:'Stock Quantity',
-//             Value:stock_qty
-//         }
-//     ],
-//     UI.FieldGroup #stock :{
-//         $Type:'UI.FieldGroupType',
-//         Data:[
-//              {
-//             Label:'Store Id',
-//             Value:storeId_ID
-//         },
-//          {
-//             Label:'Product Id',
-//             Value:productId_ID
-//         },
-//          {
-//             Label:'Stock Quantity',
-//             Value:stock_qty
-//         }
-//         ],
-//     },
-//       UI.Facets:[
-//         {
-//             $Type:'UI.ReferenceFacet',
-//             ID:'stockFacet',
-//             Label:'stock facets',
-//             Target:'@UI.FieldGroup#stock'
-//         },
-//     ],
-// );
+annotate Market.Purchase with @(
+    UI.LineItem           : [
+        {
+            Value: pon
+        },
+        {
+            Value: bp
+        },
+        {
+            Value: pod
+        },
+        {
+            Value: productID.ID
+        },
+        {
+            Value: quantity.ID
+        },
+        {
+            Value: price.ID
+        },
+        {
+            Value: storeID.ID
+        },
+    ],
+    UI.FieldGroup #purchase: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+            Value: pon
+        },
+        {
+            Value: bp
+        },
+        {
+            Value: pod
+        },
+         {
+            Value: productID.ID
+        },
+        {
+            Value: quantity.ID
+        },
+        {
+            Value: price.ID
+        },
+        {
+            Value: storeID.ID
+        },
+        ],
+    },
+    UI.Facets             : [{
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'purchaseFacet',
+        Label : 'purchase facets',
+        Target: '@UI.FieldGroup#purchase'
+    }, ],
+
+);
+
+
+annotate Market.Sales with @(
+    UI.LineItem           : [
+        {
+            Value: son
+        },
+        {
+            Value: bp
+        },
+        {
+            Value: sd
+        },
+         {
+            Value: productID.ID
+        },
+        {
+            Value: quantity.ID
+        },
+        {
+            Value: price.ID
+        },
+        {
+            Value: storeID.ID
+        },
+    ],
+    UI.FieldGroup #sales: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+            Value: son
+        },
+        {
+            Value: bp
+        },
+        {
+            Value: sd
+        },
+         {
+            Value: productID.ID
+        },
+        {
+            Value: quantity.ID
+        },
+        {
+            Value: price.ID
+        },
+        {
+            Value: storeID.ID
+        },
+        ],
+    },
+    UI.Facets             : [{
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'salesFacet',
+        Label : 'sales facets',
+        Target: '@UI.FieldGroup#sales'
+    }, ],
+
+);
+
 
 annotate Market.Business_Partner with {
     state @(
@@ -358,7 +454,7 @@ annotate Market.Store with {
 
 
 
-// annotate Market.Stock with {
+// annotate Transactional.Stock with {
 //     storeId @(
 //         Common.ValueListWithFixedValues: true,
 //         Common.ValueList : {
@@ -398,3 +494,45 @@ annotate Market.Store with {
 //         }
 //     );
 // }
+
+annotate Market.Stock with @(
+    UI.LineItem:[
+        {
+            Label:'Store Id',
+            Value:storeId_ID
+        },
+         {
+            Label:'Product Id',
+            Value:productId_ID
+        },
+        {
+            Label:'Stock Quantity',
+            Value:stock_qty
+        }
+    ],
+    UI.FieldGroup #stock :{
+        $Type:'UI.FieldGroupType',
+        Data:[
+             {
+            Label:'Store Id',
+            Value:storeId_ID
+        },
+         {
+            Label:'Product Id',
+            Value:productId_ID
+        },
+         {
+            Label:'Stock Quantity',
+            Value:stock_qty
+        }
+        ],
+    },
+      UI.Facets:[
+        {
+            $Type:'UI.ReferenceFacet',
+            ID:'stockFacet',
+            Label:'stock facets',
+            Target:'@UI.FieldGroup#stock'
+        },
+    ],
+);
