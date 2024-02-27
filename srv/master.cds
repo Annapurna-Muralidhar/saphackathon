@@ -1,14 +1,42 @@
 using {com.test.hackathon as db} from '../db/schema';
 
 service Market {
-    entity Business_Partner as projection on db.Business_Partner;
+    entity Business_Partner as projection on db.Business_Partner{
+        @UI.Hidden
+        ID,
+        *
+    };
     entity States           as projection on db.States;
-    entity Store            as projection on db.Store;
-    entity Product          as projection on db.Product;
-    entity Stock            as projection on db.Stock;
-    entity Purchase         as projection on db.Purchase;
-    entity Sales            as projection on db.Sales;
-    entity Items         as projection on db.Items;
+    entity Store            as projection on db.Store{
+        @UI.Hidden
+        ID,
+        *
+    };
+    entity Product          as projection on db.Product{
+        @UI.Hidden
+        ID,
+        *
+    };
+    entity Stock            as projection on db.Stock{
+        @UI.Hidden
+        ID,
+        *
+    };
+    entity Purchase         as projection on db.Purchase{
+        @UI.Hidden
+        ID,
+        *
+    };
+    entity Sales            as projection on db.Sales{
+        @UI.Hidden
+        ID,
+        *
+    };
+    entity Items         as projection on db.Items{
+        @UI.Hidden
+        ID,
+        *
+    };
 
 
    
@@ -648,7 +676,10 @@ annotate Market.Stock with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : storeID_ID,
                     ValueListProperty : 'ID'
-                }
+                } ,{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'store_id'
+                },
                
            
             ]
@@ -666,7 +697,10 @@ annotate Market.Stock with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : productID_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'p_id'
+                },
                
            
             ]
@@ -690,7 +724,11 @@ annotate Market.Items with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : pid_ID,
                     ValueListProperty : 'ID'
-                }
+                },
+                {
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'p_id'
+                },
                
            
             ]
@@ -708,7 +746,10 @@ annotate Market.Items with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : stk_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'stock_qty'
+                },
            
             ]
         }
@@ -725,7 +766,10 @@ annotate Market.Items with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : sp_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'sellPrice'
+                },
            
             ]
         }
@@ -742,7 +786,10 @@ annotate Market.Items with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : stid_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'store_id'
+                },
            
             ]
         }
@@ -771,7 +818,10 @@ annotate Market.Purchase with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : bp_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'bp_no'
+                },
                
            
             ]
@@ -795,7 +845,10 @@ annotate Market.Sales with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : bp_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'bp_no'
+                },
                
            
             ]
@@ -848,7 +901,10 @@ annotate Market.Purchase.productID with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : pid_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'p_id'
+                },
            
             ]
         }
@@ -904,7 +960,10 @@ annotate Market.Purchase.quantity with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : stk_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'stock_qty'
+                },
            
             ]
         }
@@ -963,7 +1022,10 @@ annotate Market.Purchase.price with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : sp_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'sellPrice'
+                },
            
             ]
         }
@@ -1017,7 +1079,10 @@ annotate Market.Purchase.storeID with {
                     $Type             : 'Common.ValueListParameterInOut',
                     LocalDataProperty : stid_ID,
                     ValueListProperty : 'ID'
-                }
+                },{
+                    $Type             : 'Common.ValueListParameterDisplayOnly',
+                    ValueListProperty : 'store_id'
+                },
            
             ]
         }
