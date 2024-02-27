@@ -3,7 +3,7 @@ using {cuid} from '@sap/cds/common';
 @assert.unique:{
     bp_no:[bp_no]
 }
-entity Business_Partner {
+entity Business_Partner : cuid {
     key ID: UUID;
     bp_no:String(6);
     @title:'Name'
@@ -30,7 +30,7 @@ entity Business_Partner {
 
 
 
-entity Store {
+entity Store : cuid  {
     key ID: UUID;
     store_id :String(10);
     @title:'Name'
@@ -54,18 +54,19 @@ entity Store {
   // stid:Composition of many Purchase on stid.stID=$self.ID;
 }
 
-entity Product {
+entity Product : cuid  {
     key ID: UUID;
     
     p_id           : String(20); 
     @title:'Name'
     name     : String(100);
     @title:'Image'
-    imageURL        : String(2000);
+    imageURL: String(1000);
     @title:'Cost Price'
     costPrice       : Decimal(15, 2); 
     @title:'Selling Price'
     sellPrice       : Decimal(15, 2); 
+    
 
    //products:Composition of many Stock on products.productId = $self;
    //products: Association to Stock on products.productId = $self.ID;
@@ -91,12 +92,13 @@ entity States {
 }
 
 
-entity Stock {
+entity Stock  : cuid {
     key ID            : UUID;
-    stID:UUID;
-    storeId         : Association to Store;
-    pID:UUID;
-    productId       : Association to Product;
+
+    storeID : Association to Store;
+   
+    productID :Association to Product;
+   
     stock_qty        : Integer;
 
    // Composition with ChildEntity
@@ -105,14 +107,21 @@ entity Stock {
 }
 
 
-entity Purchase{
-
+entity Purchase : cuid {
+    key ID            : UUID;
     @title:'Purchase Order Number'
-    key pon: Integer;
+     pon: Integer;
     @title:'Business Partner'
-    bp:String(10);
+    bp:Association to Business_Partner;
+
     @title:'Purchase Order Date'
     pod: Date;
+
+    // @title:'Items'
+    // Items:Composition of many {
+    //   key ID :UUID;
+    //   Items:Association  to Items;
+    // }
     @title:'Product ID'
     // pid:Composition of many Product on p_id.p_id = $self;
    productID:Composition of many {
@@ -126,7 +135,7 @@ entity Purchase{
   @title:'Quantity'
   quantity:Composition of many{
     key  ID:UUID;
-   stk : Association to Product;
+   stk : Association to Stock;
   }
   // sID:UUID;
   // stk : Association to Product on stk.ID =$self.pID;
@@ -144,17 +153,44 @@ entity Purchase{
     stid:Association to Store;
   }
 
+    
 
 }
 
-entity Sales{
+// entity Items{
+//   key ID:UUID;
+//   itemid:String(30);
+//   @title:'Product ID'
+//   pid : Association to Product ;
+//   @title:'Quantity'
+//   stk : Association to Stock;
+//   @title:'Price'
+//   sp: Association to Product;
+//   @title:'Store ID'
+//   stid:Association to Store;
 
+// }
+
+
+ 
+
+
+
+
+
+
+
+
+
+
+entity Sales : cuid {
+    key ID            : UUID;
     @title:'Sales Order Number'
-    key son: Integer;
+    son: Integer;
     @title:'Business Partner'
-    bp:String(10);
+    bp:Association to Business_Partner;
     @title:'Sales Date'
-    key sd: Date;
+     sd: Date;
     @title:'Product ID'
     // pid:Composition of many Product on p_id.p_id = $self;
 
@@ -182,3 +218,4 @@ entity Sales{
 
 
 }
+
