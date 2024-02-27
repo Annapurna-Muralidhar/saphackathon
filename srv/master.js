@@ -1,6 +1,6 @@
 const cds=require('@sap/cds')
 module.exports = cds.service.impl(async function () {
-    const { States, Business_Partner,Store,Product } = this.entities;
+    const { States, Business_Partner,Store,Product,Purchase } = this.entities;
     this.on("READ", Business_Partner, async (req) => {
         const results = await cds.run(req.query);
         return results;
@@ -74,6 +74,26 @@ module.exports = cds.service.impl(async function () {
 
         
       });
+
+
+
+
+
+
+    //   this.before("CREATE",  Purchase, async data => {
+        
+        
+    //     const  = SELECT.from( Product).where({ p_id: req.data.p_id });
+
+    // // Check if the price in the Purchase entity is less than the cost price of the product
+    // if (data.price < product.costPrice) {
+    //   // Throw an error or handle as per your requirement
+    //   throw new Error('Purchase price cannot be less than the cost price of the product.');
+    // }
+
+
+        
+    //   });
 
 
 

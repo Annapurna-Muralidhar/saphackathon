@@ -116,60 +116,73 @@ entity Purchase : cuid {
 
     @title:'Purchase Order Date'
     pod: Date;
+     @title:'Items'
+    Items:Composition of many {
+   key ID:UUID;
+  @title:'Product ID'
+  pid : Association to Product ;
+  @title:'Quantity'
+  qty : Integer;
+  @title:'Price'
+  price: Decimal(15,2);
+   }
 
     // @title:'Items'
     // Items:Composition of many {
     //   key ID :UUID;
     //   Items:Association  to Items;
     // }
-    @title:'Product ID'
-    // pid:Composition of many Product on p_id.p_id = $self;
-   productID:Composition of many {
-    key ID:UUID;
-    pid : Association to Product ;
-   }
+  //   @title:'Product ID'
+  //   // pid:Composition of many Product on p_id.p_id = $self;
+  //  productID:Composition of many {
+  //   key ID:UUID;
+  //   pid : Association to Product ;
+  //  }
     // pID:UUID;
     // pid : Association to Product on pid.ID =$self.pID;
   //parent: Association to ParentEntity on parent.ID = $self.parentID;
 
-  @title:'Quantity'
-  quantity:Composition of many{
-    key  ID:UUID;
-   stk : Association to Stock;
-  }
+  // @title:'Quantity'
+  //  stk : Association to Stock;
+  // quantity:Composition of many{
+  //   key  ID:UUID;
+  //  stk : Association to Stock;
+  // }
   // sID:UUID;
   // stk : Association to Product on stk.ID =$self.pID;
-  @title:'Price'
-  price:Composition of many{
-     key  ID:UUID;
-    sp: Association to Product;
-  }
+  // @title:'Price'
+  //   sp: Association to Product;
+  // price:Composition of many{
+  //    key  ID:UUID;
+  //   sp: Association to Product;
+  // }
   //sp: Association to Product on sp.ID=$self.pID;
+  // @title:'Store ID'
+  // // stID:UUID;
+  // // stid:Association to Store on stid.ID=$self.stID;
+  // storeID:Composition of many{
+  //    key  ID:UUID;
+  //   stid:Association to Store;
+  // }
   @title:'Store ID'
-  // stID:UUID;
-  // stid:Association to Store on stid.ID=$self.stID;
-  storeID:Composition of many{
-     key  ID:UUID;
-    stid:Association to Store;
-  }
+  stid:Association to Store;
 
     
 
 }
 
-entity Items {
-  key ID:UUID;
-  itemid:String(30);
-  @title:'Product ID'
-  pid : Association to Product ;
-  @title:'Quantity'
-  stk : Association to Stock;
-  @title:'Price'
-  sp: Association to Product;
-  @title:'Store ID'
-  stid:Association to Store;
+// entity Items {
+//   key ID:UUID;
+//   itemid:String(30);
+//   @title:'Product ID'
+//   pid : Association to Product ;
+//   @title:'Quantity'
+//   qty : Integer;
+//   @title:'Price'
+//   price: Decimal(15,2);
 
-}
+
+// }
 
 entity Sales : cuid {
     key ID            : UUID;
@@ -181,9 +194,16 @@ entity Sales : cuid {
      sd: Date;
     @title:'Items'
     Items:Composition of many {
-    key ID:UUID;
-    items : Association to Items ;
+   key ID:UUID;
+  @title:'Product ID'
+  pid : Association to Product ;
+  @title:'Quantity'
+  qty : Integer;
+  @title:'Price'
+  price: Decimal(15,2);
    }
+     @title:'Store ID'
+  stid:Association to Store;
 
     }
   //   @title:'Product ID'
@@ -210,6 +230,9 @@ entity Sales : cuid {
   //    key  ID:UUID;
   //   stid:Association to Store;
   // }
+
+
+
 
 
 

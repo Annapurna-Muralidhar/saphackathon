@@ -122,12 +122,26 @@
                       "requiresSelection": true,
                       "text": "Is Vendor"
                     },
+                    "businessPartnerExt3": {
+                      "press": "businesspartner.ext.businessPartnerExt.businessPartnerExt.Is_not_vendor",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Is Not Vendor"
+                    },
                     "businessPartnerExt1": {
                       "press": "businesspartner.ext.businessPartnerExt.businessPartnerExt.Is_customer",
                       "visible": true,
                       "enabled": true,
                       "requiresSelection": true,
                       "text": "Is Customer"
+                    },
+                    "businessPartnerExt2": {
+                      "press": "businesspartner.ext.businessPartnerExt.businessPartnerExt.Is_not_customer",
+                      "visible": true,
+                      "enabled": true,
+                      "requiresSelection": true,
+                      "text": "Is Not Customer"
                     }
                     
                   }
