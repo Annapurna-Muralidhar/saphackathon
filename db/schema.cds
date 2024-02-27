@@ -157,31 +157,19 @@ entity Purchase : cuid {
 
 }
 
-// entity Items{
-//   key ID:UUID;
-//   itemid:String(30);
-//   @title:'Product ID'
-//   pid : Association to Product ;
-//   @title:'Quantity'
-//   stk : Association to Stock;
-//   @title:'Price'
-//   sp: Association to Product;
-//   @title:'Store ID'
-//   stid:Association to Store;
+entity Items {
+  key ID:UUID;
+  itemid:String(30);
+  @title:'Product ID'
+  pid : Association to Product ;
+  @title:'Quantity'
+  stk : Association to Stock;
+  @title:'Price'
+  sp: Association to Product;
+  @title:'Store ID'
+  stid:Association to Store;
 
-// }
-
-
- 
-
-
-
-
-
-
-
-
-
+}
 
 entity Sales : cuid {
     key ID            : UUID;
@@ -191,31 +179,38 @@ entity Sales : cuid {
     bp:Association to Business_Partner;
     @title:'Sales Date'
      sd: Date;
-    @title:'Product ID'
-    // pid:Composition of many Product on p_id.p_id = $self;
-
-    productID:Composition of many {
+    @title:'Items'
+    Items:Composition of many {
     key ID:UUID;
-    pid : Association to Product ;
+    items : Association to Items ;
    }
-  //parent: Association to ParentEntity on parent.ID = $self.parentID;
 
-  @title:'Quantity'
-   quantity:Composition of many{
-    key  ID:UUID;
-   stk : Association to Product;
-  }
-  @title:'Price '
-   price:Composition of many{
-     key  ID:UUID;
-    sp: Association to Product;
-  }
-  @title:'Store ID'
-  storeID:Composition of many{
-     key  ID:UUID;
-    stid:Association to Store;
-  }
+    }
+  //   @title:'Product ID'
+  //   // pid:Composition of many Product on p_id.p_id = $self;
+
+  //   productID:Composition of many {
+  //   key ID:UUID;
+  //   pid : Association to Product ;
+  //  }
+  // //parent: Association to ParentEntity on parent.ID = $self.parentID;
+
+  // @title:'Quantity'
+  //  quantity:Composition of many{
+  //   key  ID:UUID;
+  //  stk : Association to Product;
+  // }
+  // @title:'Price '
+  //  price:Composition of many{
+  //    key  ID:UUID;
+  //   sp: Association to Product;
+  // }
+  // @title:'Store ID'
+  // storeID:Composition of many{
+  //    key  ID:UUID;
+  //   stid:Association to Store;
+  // }
 
 
-}
+
 
