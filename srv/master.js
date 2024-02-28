@@ -1,6 +1,6 @@
 const cds=require('@sap/cds')
 module.exports = cds.service.impl(async function () {
-    const { States, Business_Partner,Store,Product,Purchase } = this.entities;
+    const { States, Business_Partner,Store,Product,Purchase,Sales } = this.entities;
     this.on("READ", Business_Partner, async (req) => {
         const results = await cds.run(req.query);
         return results;
@@ -75,28 +75,64 @@ module.exports = cds.service.impl(async function () {
         
       });
 
+      this.before("CREATE", Business_Partner, async (req) => {
+        // Check if bp_no is provided in the request data
+        if (!req.data.bp_no) {
+            // Auto-increment logic
+            const lastBusinessPartner = await cds.run(
+              SELECT.from(Business_Partner).orderBy({ bp_no: 'desc' }).limit(1)
+            );
+    
+            let newBpNo = 0; // Default value if no business partner exists
+            if (lastBusinessPartner.length > 0) {
+                // If business partners exist, auto-increment
+                newBpNo = lastBusinessPartner[0].bp_no + 1;
+            }
+    
+            req.data.bp_no = newBpNo; // Set auto-incremented value
+        }
+    
+        // Continue with other validations or logic if needed
+    });
 
-
-
-
-
-    //   this.before("CREATE",  Purchase, async data => {
+    this.before("CREATE", Purchase, async (req) => {
+      const { Items } = req.data;
+      for (const item of Items) {
+  
+          const product = await cds.read(Product).where({ID: item.pid_ID });
+          const costPrice=product[0].costPrice;
+          const price = item.price;
+          if ( price > costPrice) {
+              req.error({
+                  code: "INVALID_PRICE",
+                  message: "Price for product cannot be more than cost price for product:"+product[0].name,
+                  target: "Items",
+              });
+          }
         
-        
-    //     const  = SELECT.from( Product).where({ p_id: req.data.p_id });
+      }
+  });
 
-    // // Check if the price in the Purchase entity is less than the cost price of the product
-    // if (data.price < product.costPrice) {
-    //   // Throw an error or handle as per your requirement
-    //   throw new Error('Purchase price cannot be less than the cost price of the product.');
-    // }
+  
+  this.before("CREATE", Sales, async (req) => {
+    const { Items } = req.data;
+    for (const item of Items) {
 
-
-        
-    //   });
-
-
-
+        const product = await cds.read(Product).where({ID: item.pid_ID });
+        const sellPrice=product[0].sellPrice;
+        const price = item.price;
+        if ( price < sellPrice) {
+            req.error({
+                code: "INVALID_PRICE",
+                message: "Price for product cannot be less than sell price for product:"+product[0].name,
+                target: "Items",
+            });
+        }
+      
+    }
+});
+  
+  
 
 
       this.on('READ',States,async(req)=>{

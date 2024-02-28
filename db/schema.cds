@@ -5,7 +5,7 @@ using {cuid} from '@sap/cds/common';
 }
 entity Business_Partner : cuid {
     key ID: UUID;
-    bp_no:String(6);
+    bp_no:Integer;
     @title:'Name'
     name:String(20);
  @title:'Address 1'
