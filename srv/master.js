@@ -1,6 +1,6 @@
 const cds=require('@sap/cds')
 module.exports = cds.service.impl(async function () {
-    const { States, Business_Partner,Store,Product,Purchase,Sales } = this.entities;
+    const { States, Business_Partner,Store,Product,Purchase,Sales ,Stock} = this.entities;
     this.on("READ", Business_Partner, async (req) => {
         const results = await cds.run(req.query);
         return results;
@@ -131,8 +131,60 @@ module.exports = cds.service.impl(async function () {
       
     }
 });
+
+
+
+this.before("CREATE", Purchase, async (req) => {
+  const { Items } = req.data;
+  const stid = req.data.stid_ID
+  for (const item of Items) {
+      const product = await cds.read(Product).where({ ID: item.pid_ID });
+      const stock = await cds.read(Stock).where({ productID: item.pid_ID });
+
+      const availableQuantity = stock[0].stock_qty;
+      const requestedQuantity = item.qty;
+
+      // if (requestedQuantity > availableQuantity) {
+      //     req.error({
+      //         code: "INSUFFICIENT_STOCK",
+      //         message: `Insufficient stock for product ${item.pid_ID}. Available quantity: ${availableQuantity}`,
+      //         target: "Items",
+      //     });
+      // } else {
+          // Decrease the quantity of the product in stock
+          const updatedStockQuantity = availableQuantity + requestedQuantity;
+          await cds.run(UPDATE(Stock).set({ stock_qty: updatedStockQuantity }).where({ productID: item.pid_ID }).and({storeID:stid}));
+      //}
+  }
+});
+
+
+
   
-  
+this.before("CREATE", Sales, async (req) => {
+  const { Items } = req.data;
+  const stid = req.data.stid_ID
+  for (const item of Items) {
+      //const product = await cds.read(Product).where({ ID: item.pid_ID });
+      const stock = await cds.read(Stock).where({ productID: item.pid_ID });
+
+      const availableQuantity = stock[0].stock_qty;
+      const requestedQuantity = item.qty;
+
+      if (requestedQuantity > availableQuantity) {
+          req.error({
+              code: "INSUFFICIENT_STOCK",
+              message: `Insufficient stock for product ${item.pid_ID}. Available quantity: ${availableQuantity}`,
+              target: "Items",
+          });
+      } else {
+          // Decrease the quantity of the product in stock
+          const updatedStockQuantity = availableQuantity - requestedQuantity;
+          await cds.run(UPDATE(Stock).set({ stock_qty: updatedStockQuantity }).where({ productID: item.pid_ID }).and({storeID:stid}));
+      }
+  }
+});
+
 
 
       this.on('READ',States,async(req)=>{
